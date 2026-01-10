@@ -310,6 +310,17 @@ export function useEmergencyTokens() {
     }
 
     try {
+      // Check if ambulance already has an active token
+      const existingToken = tokens.find(t => 
+        t.ambulance_id === ambulanceId && 
+        ['pending', 'assigned', 'route_selected', 'in_progress', 'at_patient', 'to_hospital'].includes(t.status)
+      );
+      
+      if (existingToken) {
+        console.error('Ambulance already has an active emergency token:', existingToken.token_code);
+        return null;
+      }
+
       const isUuid = (value: string) =>
         /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 
