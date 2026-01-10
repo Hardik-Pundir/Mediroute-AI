@@ -701,8 +701,11 @@ export function useEmergencyTokens() {
 
   // Get pending tokens (for hospital)
   const pendingTokens = tokens.filter(t => t.status === 'pending');
-  const assignedTokens = tokens.filter(t => t.status === 'assigned' || t.status === 'route_selected');
-  const activeTokens = tokens.filter(t => t.status === 'in_progress' || t.status === 'at_patient' || t.status === 'to_hospital');
+  const assignedTokens = tokens.filter(t => 
+    (t.status === 'assigned' || t.status === 'route_selected') && 
+    !['completed', 'cancelled', 'declined'].includes(t.status)
+  );
+  const activeTokens = tokens.filter(t => ['in_progress', 'at_patient', 'to_hospital'].includes(t.status));
 
   return {
     tokens,
