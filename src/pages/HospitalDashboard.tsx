@@ -1122,7 +1122,9 @@ export default function HospitalDashboard() {
                       ambulances.slice(0, 5).map((ambulance) => {
                         const activeToken = [...pendingTokens, ...assignedTokens, ...activeTokens].find(t => t.ambulance_id === ambulance.id);
                         const isOnDuty = ambulance.emergency_status === 'active' || ambulance.emergency_status === 'responding' || !!activeToken;
-                        const batteryLevel = Math.floor(Math.random() * 30) + 70; // Simulated battery 70-100%
+                        // Use real ambulance data instead of random values
+                        const batteryLevel = ambulance.battery_level || 85; // Default to 85% if not available
+                        const fuelLevel = ambulance.fuel_level || 75; // Default to 75% if not available
                         
                         return (
                           <div key={ambulance.id} className="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg border border-slate-700">
@@ -1155,6 +1157,19 @@ export default function HospitalDashboard() {
                                   ></div>
                                 </div>
                                 <span className="text-sm text-slate-400">{batteryLevel}%</span>
+                              </div>
+                              {/* Add fuel level indicator */}
+                              <div className="flex items-center gap-2">
+                                <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
+                                  <div 
+                                    className={`h-full rounded-full ${
+                                      fuelLevel > 60 ? 'bg-blue-500' : 
+                                      fuelLevel > 30 ? 'bg-orange-500' : 'bg-red-500'
+                                    }`}
+                                    style={{ width: `${fuelLevel}%` }}
+                                  ></div>
+                                </div>
+                                <span className="text-xs text-slate-400">⛽{fuelLevel}%</span>
                               </div>
                               <div className={`w-3 h-3 rounded-full ${isOnDuty ? 'bg-blue-500 animate-pulse' : 'bg-green-500'}`}></div>
                             </div>

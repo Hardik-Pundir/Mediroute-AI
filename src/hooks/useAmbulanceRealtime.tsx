@@ -24,13 +24,15 @@ export function useAmbulanceRealtime() {
 
       if (error) throw error;
       
-      // Transform data to include driver details
+      // Transform data to include driver details and consistent health data
       const ambulancesWithDrivers = (data || []).map(ambulance => ({
         ...ambulance,
         driver_name: ambulance.driver?.full_name || ambulance.driver?.email || null,
         driver_email: ambulance.driver?.email || null,
         care_type: 'Advanced Life Support', // Default care type
-        battery_percentage: ambulance.vehicle_health?.battery_percent || Math.floor(Math.random() * 40) + 60
+        battery_level: ambulance.vehicle_health?.battery_percent || 85,
+        battery_percentage: ambulance.vehicle_health?.battery_percent || 85,
+        fuel_level: ambulance.vehicle_health?.fuel_percent || 75
       }));
       
       setAmbulances(ambulancesWithDrivers as Ambulance[]);
