@@ -310,14 +310,17 @@ export function useEmergencyTokens() {
     }
 
     try {
-      // Check if ambulance already has an active token
-      const existingToken = tokens.find(t => 
-        t.ambulance_id === ambulanceId && 
-        ['pending', 'assigned', 'route_selected', 'in_progress', 'at_patient', 'to_hospital'].includes(t.status)
-      );
+      // Check if ambulance already has an active token in database
+      const { data: existingTokens, error: checkError } = await supabase
+        .from('emergency_tokens')
+        .select('id, token_code, status')
+        .eq('ambulance_id', ambulanceId)
+        .in('status', ['pending', 'assigned', 'route_selected', 'in_progress', 'at_patient', 'to_hospital']);
       
-      if (existingToken) {
-        console.error('Ambulance already has an active emergency token:', existingToken.token_code);
+      if (checkError) throw checkError;
+      
+      if (existingTokens && existingTokens.length > 0) {
+        console.error('Ambulance already has an active emergency token:', existingTokens[0].token_code);
         return null;
       }
 

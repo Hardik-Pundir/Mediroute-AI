@@ -15,7 +15,7 @@ interface EmergencyDisplayProps {
 
 export default function EmergencyDisplay({ token, onAssignmentComplete }: EmergencyDisplayProps) {
   const { findBestHospitals } = useHospitalSpecialties();
-  const { createHospitalEmergency } = useEmergencyTokens();
+  const { assignHospitalWithRoutes } = useEmergencyTokens();
   const [recommendations, setRecommendations] = useState<{
     best: any | null;
     nearest: any | null;
@@ -60,21 +60,14 @@ export default function EmergencyDisplay({ token, onAssignmentComplete }: Emerge
         type: 'fastest' as const
       };
 
-      const success = await createHospitalEmergency(
-        token.ambulance_id,
-        token.ambulance_origin_lat,
-        token.ambulance_origin_lng,
-        token.pickup_lat,
-        token.pickup_lng,
-        token.pickup_address,
+      const success = await assignHospitalWithRoutes(
+        token.id,
         hospital.hospital.id,
         hospital.hospital.organization_name,
         hospital.hospital.location_lat,
         hospital.hospital.location_lng,
         routeToPatient,
-        routeToHospital,
-        token.emergency_type,
-        token.medical_keyword
+        routeToHospital
       );
 
       if (success) {
