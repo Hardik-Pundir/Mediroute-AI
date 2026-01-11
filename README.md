@@ -4,7 +4,7 @@
 > **MediRoute AI** minimizes delays by automating routing, traffic control, and hospital coordination in real time.
 
 ## 🌐 Live Demo
-👉 [Live Website](https://medirouteai.vercel.app/)
+👉 [Live Website](https://medirouteai.vercel.app)
 
 ---
 
