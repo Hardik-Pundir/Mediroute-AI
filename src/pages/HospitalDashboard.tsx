@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -1122,10 +1123,9 @@ export default function HospitalDashboard() {
                       ambulances.slice(0, 5).map((ambulance) => {
                         const activeToken = [...pendingTokens, ...assignedTokens, ...activeTokens].find(t => t.ambulance_id === ambulance.id);
                         const isOnDuty = ambulance.emergency_status === 'active' || ambulance.emergency_status === 'responding' || !!activeToken;
-                        // Use real ambulance data instead of random values
-                        const batteryLevel = ambulance.battery_level || 85; // Default to 85% if not available
-                        const fuelLevel = ambulance.fuel_level || 75; // Default to 75% if not available
-                        
+                        const fuelLevel = ambulance.vehicle_health?.fuel_percent ?? 75;
+                        const batteryLevel = ambulance.vehicle_health?.battery_percent ?? 85;
+
                         return (
                           <div key={ambulance.id} className="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg border border-slate-700">
                             <div className="flex items-center gap-4">
