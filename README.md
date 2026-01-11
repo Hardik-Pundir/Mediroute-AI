@@ -6,8 +6,6 @@
 ## 🌐 Live Demo
 👉 [Live Website](https://mediroute-ai-main.vercel.app/)
 
-👉 [Demo Video](https://drive.google.com/drive/folders/1SaYn1xqYD6Y-XTptdFiBdox-okxGlThD)
-
 ---
 
 ## 🧠 Overview
