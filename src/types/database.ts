@@ -1,6 +1,6 @@
 // Custom types for the ambulance system
 
-export type UserRole = 'ambulance' | 'hospital' | 'admin';
+export type UserRole = 'ambulance' | 'hospital' | 'admin' | 'super_admin';
 export type EmergencyStatus = 'inactive' | 'active' | 'responding';
 export type RouteDirection = 'N_S' | 'S_N' | 'E_W' | 'W_E';
 export type SignalStatus = 'normal' | 'prepare' | 'priority';
@@ -13,6 +13,10 @@ export interface Profile {
   organization_name: string | null;
   is_approved: boolean;
   ambulance_id: string | null;
+  city: string;
+  permissions: any;
+  last_login: string | null;
+  two_factor_enabled: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -31,6 +35,11 @@ export interface Ambulance {
   destination_lat: number | null;
   destination_lng: number | null;
   destination_name: string | null;
+  is_blocked: boolean;
+  blocked_by: string | null;
+  blocked_at: string | null;
+  force_emergency_mode: boolean;
+  trip_history: any[];
   last_updated: string;
   created_at: string;
   // Driver details (joined from profiles)
@@ -53,6 +62,11 @@ export interface TrafficSignal {
   direction_we: string;
   priority_direction: RouteDirection | null;
   activated_by: string | null;
+  manual_override: boolean;
+  override_status: string;
+  override_duration_minutes: number;
+  health_status: string;
+  last_health_check: string;
   last_updated: string;
   created_at: string;
 }
@@ -64,6 +78,80 @@ export interface SignalActivation {
   activation_type: string;
   distance_meters: number;
   activated_at: string;
+}
+
+export interface SystemControl {
+  id: string;
+  system_enabled: boolean;
+  emergency_broadcast: string | null;
+  broadcast_active: boolean;
+  created_at: string;
+  updated_at: string;
+  updated_by: string | null;
+}
+
+export interface TrafficZone {
+  id: string;
+  zone_name: string;
+  zone_bounds: any; // GeoJSON polygon
+  is_locked: boolean;
+  locked_by: string | null;
+  locked_at: string | null;
+  created_at: string;
+}
+
+export interface GreenCorridor {
+  id: string;
+  corridor_name: string;
+  start_lat: number;
+  start_lng: number;
+  end_lat: number;
+  end_lng: number;
+  route_coordinates: any; // Array of [lat, lng] points
+  duration_minutes: number;
+  is_active: boolean;
+  activated_by: string | null;
+  activated_at: string | null;
+  created_at: string;
+}
+
+export interface HospitalCapacity {
+  id: string;
+  hospital_id: string;
+  total_beds: number;
+  occupied_beds: number;
+  icu_beds: number;
+  occupied_icu_beds: number;
+  emergency_beds: number;
+  occupied_emergency_beds: number;
+  is_accepting_patients: boolean;
+  last_updated: string;
+  updated_by: string | null;
+}
+
+export interface SystemAnalytics {
+  id: string;
+  date: string;
+  total_emergencies: number;
+  avg_response_time_seconds: number;
+  lives_saved_estimate: number;
+  corridor_efficiency_percent: number;
+  hospital_overload_rate: number;
+  peak_emergency_zones: any[];
+  created_at: string;
+}
+
+export interface AuditLog {
+  id: string;
+  user_id: string | null;
+  action: string;
+  resource_type: string;
+  resource_id: string | null;
+  old_values: any;
+  new_values: any;
+  ip_address: string | null;
+  user_agent: string | null;
+  created_at: string;
 }
 
 // Helper to calculate distance using Haversine formula
