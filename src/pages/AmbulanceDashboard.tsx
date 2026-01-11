@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAmbulance } from '@/hooks/useAmbulance';
 import { useTrafficSignals } from '@/hooks/useTrafficSignals';
 import { useEmergencyTokens } from '@/hooks/useEmergencyTokens';
+import { useHospitals } from '@/hooks/useHospitals';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, LogOut } from 'lucide-react';
@@ -31,6 +32,7 @@ export default function AmbulanceDashboard() {
   const { user, profile, loading: authLoading, signOut } = useAuth();
   const { ambulance, loading: ambLoading, updateLocation, isSimulating, startSimulation, stopSimulation } = useAmbulance();
   const { signals, checkSignalsForAmbulance } = useTrafficSignals();
+  const { hospitals } = useHospitals();
   
   const { 
     activeToken, 
@@ -200,6 +202,11 @@ export default function AmbulanceDashboard() {
       popup: signal.signal_name,
       icon: 'signal' as const
     })),
+    ...hospitals.map(hospital => ({
+      position: [hospital.location_lat, hospital.location_lng] as [number, number],
+      popup: hospital.organization_name,
+      icon: 'hospital' as const
+    })),
     ...(activeToken?.pickup_lat && activeToken?.pickup_lng ? [{
       position: [activeToken.pickup_lat, activeToken.pickup_lng] as [number, number],
       popup: 'Patient Pickup',
@@ -218,6 +225,11 @@ export default function AmbulanceDashboard() {
       popup: `Ambulance ${ambulance.vehicle_number}`,
       icon: 'ambulance' as const
     }] : []),
+    ...hospitals.map(hospital => ({
+      position: [hospital.location_lat, hospital.location_lng] as [number, number],
+      popup: hospital.organization_name,
+      icon: 'hospital' as const
+    })),
     ...(pickupLocation ? [{
       position: [pickupLocation.lat, pickupLocation.lng] as [number, number],
       popup: 'Patient Pickup Location',

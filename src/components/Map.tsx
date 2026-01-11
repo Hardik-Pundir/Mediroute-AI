@@ -39,8 +39,49 @@ const createCustomIcon = (type: 'ambulance' | 'signal' | 'hospital', highlighted
     hospital: '#3b82f6',
   };
   
-  const size = highlighted ? 36 : 24;
+  const size = highlighted ? 36 : 28;
   const border = highlighted ? '4px solid #fbbf24' : '3px solid white';
+  
+  if (type === 'hospital') {
+    return L.divIcon({
+      className: 'hospital-marker',
+      html: `<div style="
+        background-color: ${colors[type]};
+        width: ${size}px;
+        height: ${size}px;
+        border-radius: 8px;
+        border: ${border};
+        box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: ${size * 0.6}px;
+        ${highlighted ? 'animation: pulse 1.5s ease-in-out infinite;' : ''}
+      ">🏥</div>
+      <div style="
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e40af;
+        color: white;
+        padding: 1px 4px;
+        border-radius: 3px;
+        font-size: 9px;
+        font-weight: bold;
+        white-space: nowrap;
+      ">Hospital</div>
+      <style>
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.15); opacity: 0.9; }
+        }
+      </style>`,
+      iconSize: [size, size + 8],
+      iconAnchor: [size / 2, size / 2],
+      popupAnchor: [0, -size / 2],
+    });
+  }
   
   return L.divIcon({
     className: 'custom-marker',
