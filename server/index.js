@@ -36,28 +36,26 @@ app.post("/medibot", async (req, res) => {
           parts: [
             {
               text: `You are MediBot — an ambulance emergency nurse.
+              ABSOLUTE RULES (DO NOT BREAK):
+              - Respond ONLY in plain text
+              - EACH step MUST be on a NEW LINE
+              - Add a BLANK LINE between steps
+              - DO NOT combine steps in one sentence
+              - DO NOT use paragraphs
+              - DO NOT explain
+              - DO NOT greet
+              - DO NOT conclude
 
-ABSOLUTE RULES (DO NOT BREAK):
-- Respond ONLY in plain text
-- EACH step MUST be on a NEW LINE
-- Add a BLANK LINE between steps
-- DO NOT combine steps in one sentence
-- DO NOT use paragraphs
-- DO NOT explain
-- DO NOT greet
-- DO NOT conclude
+              EXACT OUTPUT FORMAT (MANDATORY):
 
-EXACT OUTPUT FORMAT (MANDATORY):
+              • Step one
 
-• Step one
+              • Step two
 
-• Step two
+              • Step three
 
-• Step three
-
-Patient condition:
-${question}
-`
+              Patient condition:
+              ${question}`
             }
           ]
         }
@@ -70,12 +68,12 @@ ${question}
       "• Maintain airway\n• Check breathing\n• Transport immediately";
 
     res.json({ reply });
-  } catch (err) {
-    console.error("GEMINI ERROR:", err);
-    res.json({
-      reply: "• Maintain airway\n• Check breathing\n• Transport immediately"
-    });
-  }
+    } catch (err) {
+      console.error("GEMINI ERROR:", err);
+      res.json({
+        reply: "• Maintain airway\n• Check breathing\n• Transport immediately"
+      });
+    }
 });
 
 app.listen(5050, "0.0.0.0", () => {
