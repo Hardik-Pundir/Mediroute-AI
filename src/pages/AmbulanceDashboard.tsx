@@ -8,7 +8,6 @@ import { useHospitals } from '@/hooks/useHospitals';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, LogOut } from 'lucide-react';
-import TrafficSignalStatusPanel from '@/components/TrafficSignalStatusPanel';
 import MediBot from '@/components/medibot';
 import { toast } from 'sonner';
 
@@ -287,15 +286,6 @@ export default function AmbulanceDashboard() {
             onStartToHospital={handleStartToHospital}
             onCompleteEmergency={handleCompleteEmergency}
             onCancelEmergency={handleCancelEmergency}
-          />
-        )}
-
-        {/* Traffic Signal Status Panel */}
-        {ambulance && hasActiveEmergency && (
-          <TrafficSignalStatusPanel
-            signals={signals}
-            ambulance={ambulance}
-            isActive={hasActiveEmergency}
           />
         )}
 
