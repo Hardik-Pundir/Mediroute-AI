@@ -4,7 +4,7 @@
 > **MediRoute AI** minimizes delays by automating routing, traffic control, and hospital coordination in real time.
 
 ## 🌐 Live Demo
-👉 [Live Website](https://mediroute-ai-main.vercel.app/)
+👉 [Live Website](https://medirouteai.vercel.app/)
 
 ---
 
@@ -45,6 +45,72 @@ to create **automated green corridors**, dynamically assign **optimal hospitals*
 - **MapEngine**: Route calculation & navigation
 - **TrafficControl**: Automated signal management
 - **TrafficSignals**: Physical infrastructure integration
+
+---
+
+## 🏗️ Basic System Logical Data Flow Diagram
+
+MediRoute AI follows a centrally controlled, hospital‑approved emergency mobility workflow.
+
+<img width="848" height="508" alt="image" src="https://github.com/user-attachments/assets/fe24d192-eca2-4fc5-b95d-8050e2c47527" />
+
+### 🚨 Emergency Entry Points
+| Actor | Action |
+|-----|-------|
+| Patient / Emergency Caller | Calls hospital emergency |
+| Hospital Control Staff| Creates emergency request |
+| Ambulance Driver | Can directly create emergency via MediRoute App |
+| City Admin | Can initiate or monitor emergencies |
+
+---
+
+### 🏥 Verification & Approval Layer
+| Component | Responsibility |
+|----------|---------------|
+| Hospital Control Unit | Approves or rejects emergency requests |
+| Admin Command Center | City‑wide supervision & override control |
+
+---
+
+### 🧠 Core Decision Layer
+| Engine | Function |
+|------|--------|
+| MediRoute Core System | Central brain coordinating all operations |
+| Hospital Control Unit | Selects best hospital based on ICU, beds, load |
+| Route Engine | Calculates fastest traffic‑aware route |
+| Map Engine | Provides navigation & road data |
+| MediBot AI Nurse | Gives first‑aid and medical guidance |
+
+---
+
+### ⚙️ Execution Layer
+| Component | Action |
+|---------|------|
+| MediRoute App | Displays live route, ETA, MediBot instructions |
+| Traffic Signal Controller | Activates green corridor |
+| City Traffic Signals | Turn green automatically for ambulance |
+
+---
+
+### 🗄 Realtime Data Layer
+| System | Purpose |
+|------|------|
+| Supabase Realtime Database | Stores emergencies, GPS, beds, ETAs |
+| Hospital Control Unit | Updates hospital readiness |
+| Admin Command Center | Monitors city‑wide emergency status |
+
+---
+
+### 🔁 End‑to‑End Flow Summary
+1. Emergency is raised by Patient / Driver / Admin  
+2. Hospital Control Unit verifies and approves  
+3. MediRoute Core processes the emergency  
+4. Best hospital is selected automatically  
+5. Fastest route is calculated  
+6. Green corridor is activated  
+7. Ambulance is guided in real time  
+8. Hospital prepares before arrival  
+9. After arrival, emergency closes and signals reset  
 
 ---
 
