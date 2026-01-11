@@ -80,6 +80,7 @@ export default function Map({
   const markersRef = useRef<L.Marker[]>([]);
   const routeLayerRef = useRef<L.Polyline | null>(null);
   const userLocationMarkerRef = useRef<L.Marker | null>(null);
+  const cursorPinRef = useRef<L.Marker | null>(null);
   const initializedRef = useRef(false);
   const locateMe = () => {
     if (!navigator.geolocation || !mapRef.current) return;
@@ -159,7 +160,94 @@ export default function Map({
     // Add click handler if provided
     if (onMapClick) {
       mapRef.current.on('click', (e: L.LeafletMouseEvent) => {
+        // Remove cursor pin immediately
+        if (cursorPinRef.current) {
+          cursorPinRef.current.remove();
+          cursorPinRef.current = null;
+        }
+        
+        // Create permanent patient location marker
+        const patientIcon = L.divIcon({
+          className: 'patient-location-marker',
+          html: `<div style="
+            width: 30px;
+            height: 30px;
+            background: #dc2626;
+            border: 4px solid white;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            animation: drop 0.5s ease-out;
+          "></div>
+          <div style="
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #dc2626;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+          ">📍 Patient</div>
+          <style>
+            @keyframes drop {
+              0% { transform: rotate(-45deg) translateY(-50px); opacity: 0; }
+              50% { transform: rotate(-45deg) translateY(5px); }
+              100% { transform: rotate(-45deg) translateY(0); opacity: 1; }
+            }
+          </style>`,
+          iconSize: [30, 30],
+          iconAnchor: [15, 30]
+        });
+        
+        L.marker(e.latlng, { icon: patientIcon })
+          .addTo(mapRef.current!)
+          .bindPopup('Patient Pickup Location');
+        
         onMapClick(e.latlng.lat, e.latlng.lng);
+      });
+      
+      // Add crosshair cursor style
+      mapRef.current.getContainer().style.cursor = 'crosshair';
+      
+      // Add mousemove handler for cursor pin
+      mapRef.current.on('mousemove', (e: L.LeafletMouseEvent) => {
+        if (cursorPinRef.current) {
+          cursorPinRef.current.setLatLng(e.latlng);
+        } else {
+          // Create cursor pin
+          const pinIcon = L.divIcon({
+            className: 'cursor-pin',
+            html: `<div style="
+              width: 20px;
+              height: 20px;
+              background: #ef4444;
+              border: 2px solid white;
+              border-radius: 50% 50% 50% 0;
+              transform: rotate(-45deg);
+              box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+              opacity: 0.8;
+            "></div>`,
+            iconSize: [20, 20],
+            iconAnchor: [10, 20]
+          });
+          
+          cursorPinRef.current = L.marker(e.latlng, { 
+            icon: pinIcon,
+            interactive: false
+          }).addTo(mapRef.current!);
+        }
+      });
+      
+      // Remove cursor pin when mouse leaves map
+      mapRef.current.on('mouseout', () => {
+        if (cursorPinRef.current) {
+          cursorPinRef.current.remove();
+          cursorPinRef.current = null;
+        }
       });
     }
 
@@ -167,6 +255,9 @@ export default function Map({
       if (mapRef.current) {
         if (userLocationMarkerRef.current) {
           userLocationMarkerRef.current.remove();
+        }
+        if (cursorPinRef.current) {
+          cursorPinRef.current.remove();
         }
         mapRef.current.remove();
         mapRef.current = null;
@@ -261,6 +352,13 @@ export default function Map({
 
   return (
  <div className="relative w-full h-full">
+   {/* Map Click Mode Indicator */}
+   {onMapClick && (
+     <div className="absolute top-3 left-3 z-[1000] bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
+       📍 Click to select location
+     </div>
+   )}
+
    {/* Locate Me Button */}
    <button
      onClick={locateMe}
